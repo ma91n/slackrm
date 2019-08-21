@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"github.com/nlopes/slack"
-	"log"
 )
 
 func main() {
@@ -16,21 +16,20 @@ func main() {
 	flag.StringVar(ts, "timestamp", "0", "timestamp of remove target comment")
 	flag.Parse()
 
-	if channel == nil {
-		log.Fatal("channel is required")
+	if *channel == "" {
+		panic("channel is required")
 	}
 
-	if token == nil {
-		log.Fatal("token is required")
+	if *token == "" {
+		panic("token is required")
 	}
 
-	if ts == nil {
-		log.Fatal("timestamp is required")
+	if *ts == "" {
+		panic("timestamp is required")
 	}
 
-	_, _, err := slack.New(*token).DeleteMessage(*channel, *ts)
-	if err != nil {
-		log.Fatalf("faile to delete: %v", err)
+	if _, _, err := slack.New(*token).DeleteMessage(*channel, *ts); err != nil {
+		panic("failed to delete: " + err.Error())
 	}
-	log.Println("success")
+	fmt.Println("success")
 }
