@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-
 	channel := flag.String("c", "", "-c slack channel name")
 	token := flag.String("tk", "", "slack access channel")
 	ts := flag.String("ts", "0", "timestamp of remove target comment")
