@@ -1,4 +1,4 @@
-module github.com/laqiiz/rmslack
+module github.com/laqiiz/slackrm
 
 go 1.12
 
