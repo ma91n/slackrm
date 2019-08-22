@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/nlopes/slack"
+	"strings"
 )
 
 func main() {
@@ -27,7 +28,14 @@ func main() {
 		panic("timestamp is required")
 	}
 
-	if _, _, err := slack.New(*token).DeleteMessage(*channel, *ts); err != nil {
+	timestamp := *ts
+	if strings.HasPrefix(*ts, "p") && len(*ts) == 17 {
+		timestamp = timestamp[1:11] + "." + timestamp[11:]
+	}
+
+	fmt.Println("timestamp", timestamp)
+
+	if _, _, err := slack.New(*token).DeleteMessage(*channel, timestamp); err != nil {
 		panic("failed to delete: " + err.Error())
 	}
 	fmt.Println("success")
