@@ -54,7 +54,7 @@ func main() {
 
 	sc := slack.New(*token)
 	if *insecure {
-		proxyURL, err := url.Parse(os.Getenv("HTTP_PROXY"))
+		proxyURL, err := url.Parse(getEnvAny("HTTP_PROXY", "http_proxy"))
 		if err != nil {
 			log.Fatalf("HTTP_PROXY is invalid url")
 		}
@@ -72,4 +72,13 @@ func main() {
 		log.Fatal("failed to delete: " + err.Error())
 	}
 	fmt.Println("success")
+}
+
+func getEnvAny(names ...string) string {
+	for _, n := range names {
+		if val := os.Getenv(n); val != "" {
+			return val
+		}
+	}
+	return ""
 }
