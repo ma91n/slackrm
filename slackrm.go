@@ -36,6 +36,10 @@ func main() {
 		}
 		channel = &split[4]
 		ts = &split[5]
+
+		// If thread comment then format like below
+		// https://<domain>.slack.com/archives/<channel>/p1566545900001800?thread_ts=1566545900.001700&cid=GJJ9NJ1B8
+		ts = &strings.Split(*ts, "?")[0]
 	}
 
 	if *channel == "" {
