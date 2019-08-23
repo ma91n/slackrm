@@ -7,17 +7,18 @@ import (
 	"github.com/nlopes/slack"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
 )
 
 func main() {
-	url := flag.String("u", "", "-u delete target slack comment url")
+	slackURL := flag.String("u", "", "-u delete target slack comment url")
 	channel := flag.String("c", "", "-c slack channel name")
 	token := flag.String("tk", "", "slack access channel")
 	ts := flag.String("ts", "0", "timestamp of remove target comment")
 	insecure := flag.Bool("insecure", false, "HTTP requests with InsecureSkipVerify transport")
-	flag.StringVar(url, "url", "", "url is delete target slack comment url")
+	flag.StringVar(slackURL, "url", "", "url is delete target slack comment url")
 	flag.StringVar(channel, "channel", "", "slack channel name")
 	flag.StringVar(token, "token", os.Getenv("SLACK_API_TOKEN"), "slack api access token")
 	flag.StringVar(ts, "timestamp", "0", "timestamp of remove target comment")
@@ -28,8 +29,8 @@ func main() {
 		panic("token is required")
 	}
 
-	if *url != "" {
-		split := strings.Split(*url, "/")
+	if *slackURL != "" {
+		split := strings.Split(*slackURL, "/")
 		if len(split) != 6 {
 			log.Fatal("url is must follow this format: https://<your slack domain>/archives/<channel name>/<comment id>")
 		}
@@ -53,9 +54,16 @@ func main() {
 
 	sc := slack.New(*token)
 	if *insecure {
+		proxyURL, err := url.Parse(os.Getenv("HTTP_PROXY"))
+		if err != nil {
+			log.Fatalf("HTTP_PROXY is invalid url")
+		}
+
 		// Under particular http proxy environment in enterprise then need to insecure option
 		hc := &http.Client{Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true},
+				Proxy: http.ProxyURL(proxyURL),
 		}}
 		sc = slack.New(*token, slack.OptionHTTPClient(hc))
 	}
