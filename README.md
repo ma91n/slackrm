@@ -60,6 +60,20 @@ Usage of slackrm:
         url is delete target slack comment url
 ```
 
+## FAQ
+
+1. Work with http proxy?
+  * Yes. You can run with proxy options.
+  ```bash
+  export http_proxy=http://proxy.example.com:PORT
+  export https_proxy=$http_proxy
+  ```
+2. I have error on: "x509: certificate signed by unknown authority"
+  * Try -insecure option.
+  ```bash
+  slackrm -url <your url> -insecure true
+  ```
+
 ## License
 
 This project is licensed under the Apache License 2.0 License - see the [LICENSE](LICENSE) file for details
