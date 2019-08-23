@@ -63,7 +63,7 @@ func main() {
 		hc := &http.Client{Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: true},
-				Proxy: http.ProxyURL(proxyURL),
+			Proxy: http.ProxyURL(proxyURL),
 		}}
 		sc = slack.New(*token, slack.OptionHTTPClient(hc))
 	}
